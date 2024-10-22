@@ -21,6 +21,7 @@ console = Console()
 MODEL_NAME = os.getenv("MODEL_NAME")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_URL = os.getenv("OPENAI_URL")
+AI_PROVIDER = os.getenv("AI_PROVIDER")
 
 # Initialize argument parser
 parser = argparse.ArgumentParser(description="Query a document.")
@@ -59,7 +60,8 @@ answer = query_document(
     openai_api_key=OPENAI_API_KEY,
     base_url=OPENAI_URL,
     temperature=args.temp,
-)
+    ai_provider=AI_PROVIDER,
+    )
 console.print(f"Completed in : {time.time() - start:.2f} seconds\n")
 
 console.print("Summary:", style="bold green")

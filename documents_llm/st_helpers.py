@@ -27,6 +27,7 @@ def run_query(
     openai_api_key: str,
     openai_url: str,
     temperature: float,
+    ai_provider: str,
 ) -> str:
     # Saves the uploaded file to a temporary location, loads the PDF, and deletes the file
     st.write("Saving the uploaded file...")
@@ -43,6 +44,7 @@ def run_query(
             openai_api_key=openai_api_key,
             base_url=openai_url,
             temperature=temperature,
+            ai_provider=ai_provider,
         )
     st.write("Querying the document...")
     return query_document(
@@ -52,4 +54,5 @@ def run_query(
         openai_api_key=openai_api_key,
         base_url=openai_url,
         temperature=temperature,
+        ai_provider=ai_provider,
     )

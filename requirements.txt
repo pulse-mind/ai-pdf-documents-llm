@@ -1,0 +1,15 @@
+pip-check-updates==0.27.0 # https://pypi.org/project/pip-check-updates/
+# pcu requirements.txt
+
+openai==1.52.0
+mistralai==1.1.0
+langchain_mistralai==0.2.0
+langchain==0.3.4
+langchain_community==0.3.3
+rich==13.9.2
+python-dotenv==1.0.1
+langchain-openai==0.2.3
+pypdf==5.0.1
+tiktoken==0.8.0
+streamlit==1.39.0
+transformers==4.45.2

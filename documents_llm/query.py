@@ -4,6 +4,7 @@ from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains.llm import LLMChain
 from langchain_core.documents.base import Document
 from langchain_core.prompts import PromptTemplate
+from langchain_mistralai import ChatMistralAI
 from langchain_openai import ChatOpenAI
 
 
@@ -14,16 +15,24 @@ def query_document(
     openai_api_key: str,
     base_url: str,
     temperature: float = 0.3,
+    ai_provider: str = None
 ) -> str:
     pass
 
-    # Define LLM chain
-    llm = ChatOpenAI(
-        temperature=temperature,
-        model_name=model_name,
-        api_key=openai_api_key,
-        base_url=base_url,
-    )
+    if ai_provider and ai_provider == "MISTRAL_AI":
+        llm = ChatMistralAI(
+            temperature=temperature,
+            model_name=model_name,
+            api_key=openai_api_key,
+        )
+    else:
+        # Define LLM chain
+        llm = ChatOpenAI(
+            temperature=temperature,
+            model_name=model_name,
+            api_key=openai_api_key,
+            base_url=base_url,
+        )
     chain = get_map_reduce_chain(llm, user_query=user_query)
 
     result = chain.invoke(docs)

@@ -16,17 +16,6 @@ This is the sample code for the following video and blog post:
 ### Dependencies
 
 All you have to do is install the dependencies in `pyproject.toml`:
-```
-python = "^3.12"
-openai = "^1.14.3"
-langchain = "^0.1.13"
-ollama = "^0.1.8"
-rich = "^13.7.1"
-python-dotenv = "^1.0.1"
-langchain-openai = "^0.1.1"
-pypdf = "^4.1.0"
-tiktoken = "^0.6.0"
-```
 
 Using poetry, that would be:
 
@@ -34,9 +23,16 @@ Using poetry, that would be:
 poetry install
 ```
 
+Using pip, that would be (It is better to activate your virtual env before):
+```bash
+pip install -r requirements.txt
+```
+
 and setup your environment variables. The recommended way is to use a `.env` file. Just copy
-and rename one of `.env-ollama-sample` or `.env-openai-sample` to `.env`. If you use
+and rename one of `.env-ollama` or `.env-openai` to `.env`. If you use
 OpenAI, you will need to also set your API key in `.env`
+
+If you want to use Mistral AI, check `.env-mistralai`, copy or rename or symlink into  `.env`. Set your API key.
 
 
 ## Streamlit App Usage

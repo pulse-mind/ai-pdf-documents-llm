@@ -13,6 +13,7 @@ load_dotenv()
 MODEL_NAME = os.getenv("MODEL_NAME")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_URL = os.getenv("OPENAI_URL")
+AI_PROVIDER = os.getenv("AI_PROVIDER")
 
 
 st.title("🐍 VCF Document Analyzer")
@@ -74,6 +75,7 @@ if st.button("Run"):
                     openai_api_key=OPENAI_API_KEY,
                     openai_url=OPENAI_URL,
                     temperature=temperature,
+                    ai_provider=AI_PROVIDER,
                 )
                 status.update(label="Done!", state="complete", expanded=False)
 
