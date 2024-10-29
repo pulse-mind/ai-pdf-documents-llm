@@ -4,12 +4,13 @@ import time
 from pathlib import Path
 
 from dotenv import load_dotenv
+from langchain_community.llms.ollama import Ollama
 from rich.console import Console
+from tabulate import tabulate
+import requests
 
 from documents_llm.document import load_pdf, load_text
 from documents_llm.summarize import summarize_document
-
-start = time.time()
 
 # Load environment variables
 load_dotenv()
@@ -34,13 +35,14 @@ parser.add_argument(
 )
 parser.add_argument("-t", "--temp", type=float, default=0.1, help="Temperature.")
 parser.add_argument("-m", "--model", type=str, help="Model name.", default=MODEL_NAME)
+parser.add_argument("-ml", "--model_list", type=str, help="List of models names.", default=MODEL_NAME)
 parser.add_argument("-o", "--output", type=str, help="The output file.")
 args = parser.parse_args()
 
 
 # Load document
 file_path = Path(args.file)
-console.print(f"Loading document: [blue]{file_path}[/blue]")
+console.print(f"Loading document: [blue]\"{file_path}\"[/blue]")
 if file_path.suffix == ".pdf":
     docs = load_pdf(file_path, args.start, args.end)
 elif file_path.suffix == ".txt":
@@ -49,25 +51,53 @@ else:
     console.print(f"Unsupported file type: {file_path.suffix}", style="bold red")
     exit(1)
 
-# Summarize document
-console.print(
-    f"Summarizing document with [green]{args.model}[/green]...", style="bold blue"
-)
-summary = summarize_document(
-    docs,
-    model_name=args.model,
-    openai_api_key=OPENAI_API_KEY,
-    base_url=OPENAI_URL,
-    temperature=args.temp,
-    ai_provider=AI_PROVIDER
-)
-console.print(f"Completed in : {time.time() - start:.2f} seconds\n")
+print_details = True
+args_models = []
+if args.model_list:
+    if args.model_list == "all":
+        response = requests.get(OPENAI_URL + '/models')
+        response.raise_for_status()
+        models_list = response.json()
+        for model_def in models_list['data']:
+            args_models.append(model_def['id'])
+    else:
+        args_models = args.model_list.split(',')
+    print_details = len(args_models) == 1
+else:
+    args_models = [args.model]
 
-console.print("Summary:", style="bold green")
+console.print(f"Models : {args_models}")
 
-console.print(summary)
+results = [["model_name", "Time", "Summary"]]
+for model_name in args_models:
+    start = time.time()
+    model_result = [model_name]
+    # Summarize document
+    if print_details:
+        console.print(f"Summarizing document with [green]{model_name}[/green]...", style="bold blue")
+    summary = summarize_document(
+        docs,
+        model_name=model_name,
+        openai_api_key=OPENAI_API_KEY,
+        base_url=OPENAI_URL,
+        temperature=args.temp,
+        ai_provider=AI_PROVIDER,
+        print_details=print_details
+    )
+    computing_time = time.time() - start
+    model_result.append(computing_time)
+    model_result.append(summary.replace("\n", "<br/>"))
 
-# Output summary
-if args.output:
-    with open(args.output, "w") as f:
-        f.write(summary)
+    console.print(f"Completed {model_name} in : {computing_time:.2f} seconds\n")
+    if print_details:
+        console.print("Summary:", style="bold green")
+        console.print(summary)
+
+    # Output summary
+    if args.output:
+        with open(args.output, "w") as f:
+            f.write(summary)
+
+    results.append(model_result)
+
+console.print(tabulate(results, headers="firstrow", floatfmt=".2f", tablefmt="unsafehtml"))

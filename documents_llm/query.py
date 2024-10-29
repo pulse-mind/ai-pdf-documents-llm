@@ -2,8 +2,10 @@ from langchain.chains import MapReduceDocumentsChain, ReduceDocumentsChain
 from langchain.chains.combine_documents.base import Chain
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains.llm import LLMChain
+from langchain_anthropic import ChatAnthropic
 from langchain_core.documents.base import Document
 from langchain_core.prompts import PromptTemplate
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_mistralai import ChatMistralAI
 from langchain_openai import ChatOpenAI
 
@@ -24,6 +26,19 @@ def query_document(
             temperature=temperature,
             model_name=model_name,
             api_key=openai_api_key,
+        )
+    elif ai_provider and ai_provider == "ANTHROPIC_AI":
+        llm = ChatAnthropic(
+            temperature=temperature,
+            model_name=model_name,
+            api_key=openai_api_key,
+        )
+    elif ai_provider and ai_provider == "GOOGLE_AI":
+        llm = ChatGoogleGenerativeAI(
+            temperature=temperature,
+            model_name=model_name,
+            model=model_name,
+            google_api_key=openai_api_key,
         )
     else:
         # Define LLM chain

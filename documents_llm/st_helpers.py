@@ -45,6 +45,7 @@ def run_query(
             base_url=openai_url,
             temperature=temperature,
             ai_provider=ai_provider,
+            print_details=False,
         )
     st.write("Querying the document...")
     return query_document(

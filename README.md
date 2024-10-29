@@ -34,6 +34,10 @@ OpenAI, you will need to also set your API key in `.env`
 
 If you want to use Mistral AI, check `.env-mistralai`, copy or rename or symlink into  `.env`. Set your API key.
 
+If you want to use Anthropic AI, check `.env-anthropicai`, copy or rename or symlink into  `.env`. Set your API key.
+
+If you want to use Google AI, check `.env-google`, copy or rename or symlink into  `.env`. Set your API key.
+
 
 ## Streamlit App Usage
 
