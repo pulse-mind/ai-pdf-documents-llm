@@ -35,7 +35,7 @@ parser.add_argument(
 )
 parser.add_argument("-t", "--temp", type=float, default=0.1, help="Temperature.")
 parser.add_argument("-m", "--model", type=str, help="Model name.", default=MODEL_NAME)
-parser.add_argument("-ml", "--model_list", type=str, help="List of models names.", default=MODEL_NAME)
+parser.add_argument("-l", "--model_list", type=str, help="List of models names.", default=None)
 parser.add_argument("-o", "--output", type=str, help="The output file.")
 args = parser.parse_args()
 
@@ -60,6 +60,7 @@ if args.model_list:
         models_list = response.json()
         for model_def in models_list['data']:
             args_models.append(model_def['id'])
+        args_models.sort()
     else:
         args_models = args.model_list.split(',')
     print_details = len(args_models) == 1

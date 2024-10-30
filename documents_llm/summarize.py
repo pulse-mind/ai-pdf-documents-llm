@@ -78,6 +78,11 @@ def summarize_document(
 
     llm_chain = prompt | llm | StrOutputParser()
 
-    result = llm_chain.invoke(docs)
+    try:
+        result = llm_chain.invoke(docs)
+        return result
+    except Exception as e:
+        return f"Exception using {model_name}: {e.message}"
 
-    return result
+
+
