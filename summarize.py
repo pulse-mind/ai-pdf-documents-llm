@@ -4,7 +4,6 @@ import time
 from pathlib import Path
 
 from dotenv import load_dotenv
-from langchain_community.llms.ollama import Ollama
 from rich.console import Console
 from tabulate import tabulate
 import requests
@@ -98,6 +97,10 @@ for model_name in args_models:
     if args.output:
         with open(args.output, "w") as f:
             f.write(summary)
+
+    if AI_PROVIDER and AI_PROVIDER == "MISTRAL_AI" and not MODEL_NAME == list[-1]:
+        console.print("Sleep to avoid rate limit 429")
+        time.sleep(5)
 
     results.append(model_result)
 

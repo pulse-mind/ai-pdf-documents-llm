@@ -1,5 +1,3 @@
-from langchain.chains.combine_documents.stuff import StuffDocumentsChain
-from langchain.chains.llm import LLMChain
 from langchain_anthropic import ChatAnthropic
 from langchain_core.documents.base import Document
 from langchain_core.output_parsers import StrOutputParser
@@ -48,6 +46,15 @@ def summarize_document(
             model=model_name,
             google_api_key=openai_api_key,
         )
+    elif ai_provider and ai_provider == "DEEP_INFRA":
+        if print_details:
+            console.print(f"AI Provider: {ai_provider}")
+        llm = ChatOpenAI(
+            temperature=temperature,
+            model_name=model_name,
+            api_key=openai_api_key,
+            base_url=base_url,
+        )
     else:
         if print_details:
             console.print(f"AI Provider: {"ChatOpenAI"}")
@@ -82,7 +89,10 @@ def summarize_document(
         result = llm_chain.invoke(docs)
         return result
     except Exception as e:
-        return f"Exception using {model_name}: {e.message}"
+        if hasattr(e, "message"):
+            return f"Exception using {model_name}: {e.message}"
+        else:
+            return f"Exception using {model_name}: {e}"
 
 
 
